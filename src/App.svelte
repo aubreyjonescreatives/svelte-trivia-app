@@ -5,11 +5,11 @@ import { onMount } from "svelte";
 
 
 
-  let users = [];
+  let results = [];
 
   onMount(async () => {
     const res = await fetch(`https://opentdb.com/api.php?amount=10`);
-     users = await res.json();
+     results = await res.json();
   });
 
 	let count = 0; 
@@ -39,21 +39,21 @@ import { onMount } from "svelte";
 <form>
 <select>
   <option disabled selected>Choose Category</option>
-    <option value="1">{users.category}</option>
-    <option value="2">{users.category}</option>
-    <option value="3">{users.category}</option>
+    <option value="1">{results.category}</option>
+    <option value="2">{results.category}</option>
+    <option value="3">{results.category}</option>
 	</select>
 <select>
 	  <option disabled selected>Choose Difficulty</option>
-    <option value="1">{users.difficulty}</option>
-    <option value="2">{users.difficulty}</option>
-    <option value="3">{users.difficulty}</option>
+    <option value="1">{results.difficulty}</option>
+    <option value="2">{results.difficulty}</option>
+    <option value="3">{results.difficulty}</option>
 	</select>
-	 {#each users as user}
+	 {#each results as result}
 	<ul>
-<h1 id="question">{user.question}</h1>
-<button on:click={correctAnswer} id="correct_answer">{user.correct_answer}</button>
-<li><button on:click={wrongAnswer} id="incorrect_answers">{user.incorrect_answers}</button></li>		
+<h1 id="question">{result.question}</h1>
+<button on:click={correctAnswer} id="correct_answer">{result.correct_answer}</button>
+<li><button on:click={wrongAnswer} id="incorrect_answers">{result.incorrect_answers}</button></li>		
 	</ul>
  {/each}
 	</form>
