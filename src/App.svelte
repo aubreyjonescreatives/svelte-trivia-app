@@ -9,6 +9,8 @@ let selectedCat = '';
 let selectedDiff = ''; 
 let questions = []; 
 let selectedQuestion = ''; 
+let correctAnswer = [];  
+let incorrectAnswers = [];  
 
 onMount(() => {
 	fetch(`https://opentdb.com/api.php?amount=10`)
@@ -17,9 +19,11 @@ onMount(() => {
 	})
 	.then((data) => {
 		console.log(data)
-		categories = data.results.category; 
-		difficulties = data.results.difficulty; 
-		questions = data.results.question; 
+		categories = data.results[0].category; 
+		difficulties = data.results[0].difficulty; 
+		questions = data.results[0].question; 
+		correctAnswer = data.results[0].correct_answer; 
+		incorrectAnswers = data.results[0].incorrect_answers; 
 	})
 })
 
@@ -34,7 +38,7 @@ onMount(() => {
 
 	let count = 0; 
 
-	function correctAnswer() {
+	function rightAnswer() {
 		count += 1;
 		console.log(count)
 	}
@@ -65,6 +69,7 @@ onMount(() => {
 	</select>
 </div>
 <div>
+<label>Choose Difficulty</label>
 <select bind:value="{selectedDiff}" name="difficulty" id="difficulty">
 	  <option disabled selected>Choose Difficulty</option>
 	{#each difficulties as difficulty}
@@ -82,10 +87,10 @@ onMount(() => {
 
 <div>
 <div>{questions}</div>
-<button>Answer 1</button>
-<button>Answer 2</button>
-<button>Answer 3</button>
-<button>Answer 4</button>
+<button>{correctAnswer}</button>
+<button>{incorrectAnswers[0]}</button>
+<button>{incorrectAnswers[1]}</button>
+<button>{incorrectAnswers[2]}</button>
 </div>
 
 
