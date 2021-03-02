@@ -1,16 +1,36 @@
 <script>
+
 import { onMount } from "svelte";
 
 
+let categories = []; 
+let difficulties = []; 
+let selectedCat = ''; 
+let selectedDiff = ''; 
+let questions = []; 
+let selectedQuestion = ''; 
+
+onMount(() => {
+	fetch(`https://opentdb.com/api.php?amount=10`)
+	.then(function(response) {
+		return response.json()
+	})
+	.then((data) => {
+		console.log(data)
+		categories = data.results.category; 
+		difficulties = data.results.difficulty; 
+		questions = data.results.question; 
+	})
+})
+
+	
+	async function getQuestions() {
+		const response = await fetch(`https://opentdb.com/api.php?amount=10&category=${selectedCat}&difficulty=${selectedDiff}`)
+		const data = await response.json(); 
 
 
-
-  let results = [];
-
-  onMount(async () => {
-    const res = await fetch(`https://opentdb.com/api.php?amount=10`);
-     results = await res.json();
-  });
+	}
+	
 
 	let count = 0; 
 
@@ -28,35 +48,47 @@ import { onMount } from "svelte";
 	
 	
 	
-	
-	
 </script>
 
 
 <main>
+	<h1>Trivia Game</h1>
 	
-	
-<form>
-<select>
-  <option disabled selected>Choose Category</option>
-    <option value="1">{results.category}</option>
-    <option value="2">{results.category}</option>
-    <option value="3">{results.category}</option>
+<div>
+
+<label>Choose Category</label>
+<select bind:value="{selectedCat}" name="category" id="category">
+	<option value="">Please choose an option</option>
+	{#each categories as category}
+	<option value="{category.id}">{category.name}</option>
+	{/each}
 	</select>
-<select>
+</div>
+<div>
+<select bind:value="{selectedDiff}" name="difficulty" id="difficulty">
 	  <option disabled selected>Choose Difficulty</option>
-    <option value="1">{results.difficulty}</option>
-    <option value="2">{results.difficulty}</option>
-    <option value="3">{results.difficulty}</option>
+	{#each difficulties as difficulty}
+    <option value="1">{difficulty.easy}</option>
+    <option value="2">{difficulty.medium}</option>
+    <option value="3">{difficulty.hard}</option>
+	{/each}
 	</select>
-	 {#each results as result}
-	<ul>
-<h1 id="question">{result.question}</h1>
-<button on:click={correctAnswer} id="correct_answer">{result.correct_answer}</button>
-<li><button on:click={wrongAnswer} id="incorrect_answers">{result.incorrect_answers}</button></li>		
-	</ul>
- {/each}
-	</form>
+</div>
+
+<div>
+<button on:click={() => getQuestions()}>Start Game!</button>
+</div>
+
+
+<div>
+<div>{questions}</div>
+<button>Answer 1</button>
+<button>Answer 2</button>
+<button>Answer 3</button>
+<button>Answer 4</button>
+</div>
+
+
 </main>
 
 
